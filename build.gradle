@@ -1,0 +1,74 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.3.50'
+    id 'maven-publish'
+    id "com.jfrog.bintray" version "1.8.1"
+    id 'org.jetbrains.dokka' version '0.10.0'
+}
+
+group 'me.fungames'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar) {
+    from javadoc
+    classifier = 'javadoc'
+}
+
+bintray {
+    user = findProperty("bintray.user")
+    key = findProperty('bintray.key')
+    publications = ['maven']
+
+    pkg {
+        repo = 'mavenRepo'
+        name = 'Fortnite-Api'
+        userOrg = 'fungamesleaks'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/FunGamesLeaks/Fortnite-Api.git'
+        version {
+            name = version
+            desc = version
+            released  = new Date()
+        }
+    }
+
+}
+
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifactId = "Fortnite-Api"
+            groupId = group
+            version = version
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+        }
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation 'com.squareup.okhttp3:okhttp:4.2.2'
+    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}

@@ -6,6 +6,39 @@ import me.fungames.fortnite.api.network.services.*
 
 
 interface FortniteApi {
+
+    class Builder {
+        private var email: String? = null
+        private var password: String? = null
+        private var loginAsUser : Boolean = true
+
+        fun email(email: String): Builder {
+            this.email = email
+            return this
+        }
+        fun password(password: String): Builder {
+            this.password = password
+            return this
+        }
+        fun loginAsUser(loginAsUser : Boolean): Builder {
+            this.loginAsUser = loginAsUser
+            return this
+        }
+
+        fun build() = FortniteApiImpl()
+
+        fun buildAndLogin(): FortniteApi {
+            val api = FortniteApiImpl()
+            if (loginAsUser) {
+                check(email != null && password != null) { "Logging in as user requires email and password" }
+                api.login(email!!, password!!)
+            } else {
+                api.loginClientCredentials()
+            }
+            return api
+        }
+    }
+
     val isLoggedIn: Boolean
 
     @Throws(EpicErrorException::class)

@@ -68,7 +68,7 @@ open class BaseOauthResponse(
      */
     var device_id: String,
     var expires_at: Date,
-    var expires_in: Int?,
+    var expires_in: Int,
     var in_app_id: String,
     var internal_client: Boolean?,
     var lastPasswordValidation: Date,
@@ -87,7 +87,7 @@ class LoginResponse(
     client_service: String,
     device_id: String,
     expires_at: Date,
-    expires_in: Int?,
+    expires_in: Int,
     in_app_id: String,
     internal_client: Boolean?,
     lastPasswordValidation: Date,
@@ -116,7 +116,7 @@ data class QueryExternalIdMappingsByIdPayload(var ids: List<String>, var authTyp
 
 class VerifyResponse(
     account_id: String, client_id: String, client_service: String, device_id: String, expires_at: Date,
-    expires_in: Int?, in_app_id: String, internal_client: Boolean?, lastPasswordValidation: Date, perms: Array<Perm>,
+    expires_in: Int, in_app_id: String, internal_client: Boolean?, lastPasswordValidation: Date, perms: Array<Perm>,
     token_type: String, var app: String, var auth_method: String, var session_id: String, var token: String
 ) : BaseOauthResponse(
     account_id,

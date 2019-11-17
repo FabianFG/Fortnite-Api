@@ -70,8 +70,8 @@ interface FortniteApi {
     val personaPublicService : PersonaPublicService
 
 
-    val language: String
+    var language: String
     val accountTokenType: String
-
     val accountToken: String
+    val accountExpiresAtMillis: Long
 }

@@ -60,8 +60,15 @@ class FortniteApiImpl internal constructor(): FortniteApi {
             return epicAccountAccessToken!!
         }
 
+    override val accountExpiresAtMillis: Long
+        get() {
+            checkNotNull(epicAccountExpiresAtMillis) { "Api is not logged in" }
+            return epicAccountExpiresAtMillis!!
+        }
+
     private var epicAccountTokenType : String? = null
     private var accountExpiresAt: Date? = null
+    private var epicAccountExpiresAtMillis: Long? = null
     private var accountRefreshToken: String? = null
     private var epicAccountAccessToken: String? = null
     private var accountId: String? = null
@@ -143,6 +150,7 @@ class FortniteApiImpl internal constructor(): FortniteApi {
         val data = response.body()!!
         this.epicAccountAccessToken = data.access_token
         this.accountExpiresAt = data.expires_at
+        this.epicAccountExpiresAtMillis = System.currentTimeMillis() + data.expires_in
         this.accountId = data.account_id
         this.accountRefreshToken = data.refresh_token
         this.epicAccountTokenType = data.token_type

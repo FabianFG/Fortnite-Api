@@ -2,8 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b9c99041-fe2d-4a6f-8e2f-366b90b36854" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/network/services/LauncherPublicService.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/model/LauncherModel.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/FortniteApi.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/FortniteApi.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/FortniteApiImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/FortniteApiImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/model/AccountModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/model/AccountModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/network/services/LauncherPublicService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/network/services/LauncherPublicService.kt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -51,8 +56,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="TornadoFX Code View" />
-        <option value="Kotlin File" />
         <option value="Kotlin Interface" />
+        <option value="Kotlin File" />
       </list>
     </option>
   </component>
@@ -96,7 +101,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.Fortnite-Api [bintrayUpload]">
+  <component name="RunManager" selected="Kotlin.TestKt">
     <configuration name="Fortnite-Api [bintrayUpload]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -131,8 +136,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.Fortnite-Api [bintrayUpload]" />
         <item itemvalue="Kotlin.TestKt" />
+        <item itemvalue="Gradle.Fortnite-Api [bintrayUpload]" />
       </list>
     </recent_temporary>
   </component>
@@ -152,7 +157,7 @@
       <workItem from="1573743407410" duration="16787000" />
       <workItem from="1573835661207" duration="6323000" />
       <workItem from="1573903856948" duration="18111000" />
-      <workItem from="1573984153945" duration="1521000" />
+      <workItem from="1573984153945" duration="3648000" />
     </task>
     <task id="LOCAL-00001" summary="first release and builder">
       <created>1573936210358</created>
@@ -168,7 +173,14 @@
       <option name="project" value="LOCAL" />
       <updated>1573984672296</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="added launcher public service">
+      <created>1573988111485</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1573988111485</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -190,22 +202,18 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="first release and builder" />
     <MESSAGE value="added builder option for setting a custom token" />
-    <option name="LAST_COMMIT_MESSAGE" value="added builder option for setting a custom token" />
+    <MESSAGE value="added launcher public service" />
+    <option name="LAST_COMMIT_MESSAGE" value="added launcher public service" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/src/test/kotlin/Test.kt</url>
-          <line>8</line>
-          <option name="timeStamp" value="11" />
+          <line>5</line>
+          <option name="timeStamp" value="13" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
-    <watches-manager>
-      <configuration name="JetRunConfigurationType">
-        <watch expression="((FortMcpResponse)((Response)setAffiliateName).body).profileChanges" custom="me.fungames.fortnite.api.model.FortMcpResponse,retrofit2.Response" />
-      </configuration>
-    </watches-manager>
   </component>
 </project>

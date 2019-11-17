@@ -15,6 +15,7 @@ import me.fungames.fortnite.api.network.services.*
 import okhttp3.Cache
 import retrofit2.Response
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class FortniteApiImpl internal constructor(): FortniteApi {
@@ -150,7 +151,7 @@ class FortniteApiImpl internal constructor(): FortniteApi {
         val data = response.body()!!
         this.epicAccountAccessToken = data.access_token
         this.accountExpiresAt = data.expires_at
-        this.epicAccountExpiresAtMillis = System.currentTimeMillis() + data.expires_in
+        this.epicAccountExpiresAtMillis = System.currentTimeMillis() + TimeUnit.MILLISECONDS.convert(data.expires_in.toLong(), TimeUnit.SECONDS)
         this.accountId = data.account_id
         this.accountRefreshToken = data.refresh_token
         this.epicAccountTokenType = data.token_type

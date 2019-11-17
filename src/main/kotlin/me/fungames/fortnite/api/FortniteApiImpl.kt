@@ -17,11 +17,10 @@ import retrofit2.Response
 import java.util.*
 
 
-class FortniteApiImpl(): FortniteApi {
+class FortniteApiImpl: FortniteApi {
 
 
     var clientLauncherToken: String = Utils.CLIENT_LAUNCHER_TOKEN
-    var fortniteClientToken: String = Utils.CLIENT_LAUNCHER_TOKEN
 
     override var isLoggedIn = false
         private set

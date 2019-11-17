@@ -11,6 +11,7 @@ interface FortniteApi {
         private var email: String? = null
         private var password: String? = null
         private var loginAsUser : Boolean = true
+        private var clientToken: String? = null
 
         fun email(email: String): Builder {
             this.email = email
@@ -24,11 +25,15 @@ interface FortniteApi {
             this.loginAsUser = loginAsUser
             return this
         }
+        fun clientToken(token: String): Builder {
+            this.clientToken = token
+            return this
+        }
 
-        fun build() = FortniteApiImpl()
+        fun build() = FortniteApiImpl().apply { if (clientToken != null) this.clientLauncherToken = clientToken!! }
 
         fun buildAndLogin(): FortniteApi {
-            val api = FortniteApiImpl()
+            val api = build()
             if (loginAsUser) {
                 check(email != null && password != null) { "Logging in as user requires email and password" }
                 api.login(email!!, password!!)

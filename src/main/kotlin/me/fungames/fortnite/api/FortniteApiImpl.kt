@@ -17,8 +17,7 @@ import retrofit2.Response
 import java.util.*
 
 
-class FortniteApiImpl: FortniteApi {
-
+class FortniteApiImpl internal constructor(): FortniteApi {
 
     var clientLauncherToken: String = Utils.CLIENT_LAUNCHER_TOKEN
 
@@ -26,7 +25,6 @@ class FortniteApiImpl: FortniteApi {
         private set
 
     override var language: String = "en"
-        private set
 
     private val gson = GsonBuilder()
         .registerTypeAdapter(ProfileNotification::class.java, ProfileNotification.Serializer())
@@ -44,6 +42,7 @@ class FortniteApiImpl: FortniteApi {
     override val fortniteContentWebsiteService : FortniteContentWebsiteService
     override val fortnitePublicService : FortnitePublicService
     override val friendsPublicService : FriendsPublicService
+    override val launcherPublicService: LauncherPublicService
     override val partyService : PartyService
     override val personaPublicService : PersonaPublicService
 
@@ -93,6 +92,9 @@ class FortniteApiImpl: FortniteApi {
         friendsPublicService =
             retrofitBuilder.baseUrl(FriendsPublicService.BASE_URL).build().create(
                 FriendsPublicService::class.java)
+        launcherPublicService =
+            retrofitBuilder.baseUrl(LauncherPublicService.BASE_URL).build().create(
+                LauncherPublicService::class.java)
         partyService =
             retrofitBuilder.baseUrl(PartyService.BASE_URL).build().create(
                 PartyService::class.java)

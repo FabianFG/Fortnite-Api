@@ -65,6 +65,7 @@ interface FortniteApi {
     val fortniteContentWebsiteService : FortniteContentWebsiteService
     val fortnitePublicService : FortnitePublicService
     val friendsPublicService : FriendsPublicService
+    val launcherPublicService : LauncherPublicService
     val partyService : PartyService
     val personaPublicService : PersonaPublicService
 

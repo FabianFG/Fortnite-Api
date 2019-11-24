@@ -26,6 +26,9 @@ interface CatalogPublicService {
     fun queryOffers(@Path("namespace") namespace: String): Call<JsonElement>
 
     // items, category, status, sortBy, sortDir
+    @GET("/catalog/api/shared/namespace/{namespace}/items/{itemId}")
+    fun queryItem(@Path("namespace") namespace: String, @Path("itemId") itemId : String): Call<JsonElement>
+
     @GET("/catalog/api/shared/namespace/{namespace}/items")
     fun queryItems(@Path("namespace") namespace: String): Call<JsonElement>
 

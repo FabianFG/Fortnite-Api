@@ -60,7 +60,7 @@ data class BuildInfo(
     val hash : String,
     val labelName: String,
     val manifests : List<ManifestDownloadInfo>,
-    val metadata: Map<String, String>
+    val metadata: Map<String, String>?
 ) {
     data class ManifestDownloadInfo(
         val headers : List<Header>?,

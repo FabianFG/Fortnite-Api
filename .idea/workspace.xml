@@ -4,7 +4,7 @@
     <list default="true" id="b9c99041-fe2d-4a6f-8e2f-366b90b36854" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/model/LauncherModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/model/LauncherModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/FortniteApiImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/FortniteApiImpl.kt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -72,7 +72,7 @@
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="reference.settings.ide.settings.file-colors" />
+    <property name="settings.editor.selected.configurable" value="discord-application" />
   </component>
   <component name="RecentsManager">
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
@@ -117,6 +117,25 @@
       <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
       <method v="2" />
     </configuration>
+    <configuration name="Fortnite-Api [publishMavenPublicationToMavenLocal]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="publishMavenPublicationToMavenLocal" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
     <configuration name="TestKt" type="JetRunConfigurationType" factoryName="Kotlin" temporary="true" nameIsGenerated="true">
       <module name="Fortnite-Api.test" />
       <option name="VM_PARAMETERS" />
@@ -133,6 +152,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.Fortnite-Api [bintrayUpload]" />
+        <item itemvalue="Gradle.Fortnite-Api [publishMavenPublicationToMavenLocal]" />
         <item itemvalue="Kotlin.TestKt" />
       </list>
     </recent_temporary>
@@ -157,7 +177,10 @@
       <workItem from="1574093445320" duration="599000" />
       <workItem from="1574527660869" duration="1298000" />
       <workItem from="1574606325432" duration="5205000" />
-      <workItem from="1574878530172" duration="30000" />
+      <workItem from="1574878530172" duration="686000" />
+      <workItem from="1574956558335" duration="832000" />
+      <workItem from="1574963932774" duration="599000" />
+      <workItem from="1575063362345" duration="502000" />
     </task>
     <task id="LOCAL-00001" summary="first release and builder">
       <created>1573936210358</created>
@@ -208,7 +231,14 @@
       <option name="project" value="LOCAL" />
       <updated>1574609979589</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="updated the model">
+      <created>1574878608463</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1574878608463</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -235,7 +265,8 @@
     <MESSAGE value="fixed expires at millis time" />
     <MESSAGE value="more launcher endpoints" />
     <MESSAGE value="version 1.4" />
-    <option name="LAST_COMMIT_MESSAGE" value="version 1.4" />
+    <MESSAGE value="updated the model" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated the model" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

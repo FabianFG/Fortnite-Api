@@ -13,7 +13,10 @@ import me.fungames.fortnite.api.model.notification.ProfileNotification
 import me.fungames.fortnite.api.network.DefaultInterceptor
 import me.fungames.fortnite.api.network.services.*
 import okhttp3.Cache
+import okhttp3.JavaNetCookieJar
 import retrofit2.Response
+import java.net.CookieManager
+import java.net.CookiePolicy
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -31,6 +34,7 @@ class FortniteApiImpl internal constructor(): FortniteApi {
         .registerTypeAdapter(ProfileNotification::class.java, ProfileNotification.Serializer())
         .create()!!
     private val httpClient: OkHttpClient = OkHttpClient.Builder()
+        .cookieJar(JavaNetCookieJar(CookieManager(null, CookiePolicy.ACCEPT_ALL)))
         .cache(Cache(Utils.cacheDirFile, 4 * 1024 * 1024))
         .addInterceptor(DefaultInterceptor(this))
         .build()

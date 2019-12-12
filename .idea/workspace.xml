@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b9c99041-fe2d-4a6f-8e2f-366b90b36854" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/FortniteApiImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/FortniteApiImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/model/FortniteModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/model/FortniteModel.kt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -97,7 +99,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.Fortnite-Api [bintrayUpload]">
+  <component name="RunManager" selected="Kotlin.TestKt">
     <configuration name="Fortnite-Api [bintrayUpload]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -151,9 +153,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.Fortnite-Api [bintrayUpload]" />
-        <item itemvalue="Gradle.Fortnite-Api [publishMavenPublicationToMavenLocal]" />
         <item itemvalue="Kotlin.TestKt" />
+        <item itemvalue="Gradle.Fortnite-Api [publishMavenPublicationToMavenLocal]" />
+        <item itemvalue="Gradle.Fortnite-Api [bintrayUpload]" />
       </list>
     </recent_temporary>
   </component>
@@ -181,6 +183,10 @@
       <workItem from="1574956558335" duration="832000" />
       <workItem from="1574963932774" duration="599000" />
       <workItem from="1575063362345" duration="502000" />
+      <workItem from="1575115837875" duration="794000" />
+      <workItem from="1575571171115" duration="623000" />
+      <workItem from="1575649508206" duration="87000" />
+      <workItem from="1576177578529" duration="509000" />
     </task>
     <task id="LOCAL-00001" summary="first release and builder">
       <created>1573936210358</created>
@@ -238,7 +244,14 @@
       <option name="project" value="LOCAL" />
       <updated>1574878608463</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="fixed login flow">
+      <created>1575116033445</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1575116033445</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -266,17 +279,39 @@
     <MESSAGE value="more launcher endpoints" />
     <MESSAGE value="version 1.4" />
     <MESSAGE value="updated the model" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated the model" />
+    <MESSAGE value="fixed login flow" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed login flow" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/test/kotlin/Test.kt</url>
-          <line>12</line>
-          <option name="timeStamp" value="14" />
+          <url>file://$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/FortniteApiImpl.kt</url>
+          <line>140</line>
+          <option name="timeStamp" value="17" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="com.vaadin.designer2.intellij.settings.SizePresetsSettingsComponent">
+    <option name="sizePresets">
+      <list>
+        <SizePreset>
+          <option name="caption" value="Phone" />
+          <option name="height" value="568" />
+          <option name="width" value="320" />
+        </SizePreset>
+        <SizePreset>
+          <option name="caption" value="Tablet" />
+          <option name="height" value="1024" />
+          <option name="width" value="768" />
+        </SizePreset>
+        <SizePreset>
+          <option name="caption" value="Desktop" />
+          <option name="height" value="900" />
+          <option name="width" value="1440" />
+        </SizePreset>
+      </list>
+    </option>
   </component>
 </project>

@@ -86,7 +86,7 @@ data class FortCatalogResponse(
         var title: String,
         var shortDescription: String,
         var description: String,
-        var displayAssetPath: String,
+        var displayAssetPath: String?,
         var itemGrants: List<FortItemStack>,
 
         //***BRWeeklyStorefront***

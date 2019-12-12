@@ -16,9 +16,6 @@ interface EpicGamesService {
     @POST("/id/api/login")
     fun login(@FieldMap fields: Map<String, String>, @Header("X-XSRF-TOKEN") xsfrToken : String) : Call<Void>
 
-    /**
-     * @param ssoSession must start with EPIC_SSO_SESSION=
-     */
     @GET("/id/api/exchange")
-    fun exchange(@Header("Cookie") ssoSession : String) : Call<EpicExchangeCode>
+    fun exchange() : Call<EpicExchangeCode>
 }

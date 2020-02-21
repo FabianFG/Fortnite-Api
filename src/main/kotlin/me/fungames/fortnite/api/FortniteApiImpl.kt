@@ -199,6 +199,10 @@ class FortniteApiImpl internal constructor(): FortniteApi {
     private fun verifyToken() {
         require(isLoggedIn) { "Api is not logged in" }
         if (System.currentTimeMillis() >= this.epicAccountExpiresAtMillis!!) {
+            if (this.accountRefreshToken == null) {
+                login()
+                return
+            }
             val refresh = this.accountPublicService.grantToken("basic ${Utils.CLIENT_LAUNCHER_TOKEN}", "refresh_token", mapOf("refresh_token" to this.accountRefreshToken!!), null).execute()
             if (!refresh.isSuccessful) {
                 System.err.println("Failed to use refresh token")

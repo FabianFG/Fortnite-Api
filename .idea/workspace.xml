@@ -4,11 +4,7 @@
     <list default="true" id="b9c99041-fe2d-4a6f-8e2f-366b90b36854" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/FortniteApi.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/FortniteApi.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/FortniteApiImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/FortniteApiImpl.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/model/FortniteModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/model/FortniteModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/network/DefaultInterceptor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/network/DefaultInterceptor.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/network/services/FortnitePublicService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/network/services/FortnitePublicService.kt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -196,7 +192,7 @@
       <workItem from="1579100728841" duration="682000" />
       <workItem from="1579973275311" duration="620000" />
       <workItem from="1580033630764" duration="602000" />
-      <workItem from="1582299296322" duration="5444000" />
+      <workItem from="1582299296322" duration="6759000" />
     </task>
     <task id="LOCAL-00001" summary="first release and builder">
       <created>1573936210358</created>
@@ -282,7 +278,14 @@
       <option name="project" value="LOCAL" />
       <updated>1579100769173</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="auto refresh token on accessing services, using refresh tokens">
+      <created>1582309700838</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1582309700838</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -313,14 +316,15 @@
     <MESSAGE value="fixed login flow" />
     <MESSAGE value="fixed login again" />
     <MESSAGE value="fixed login again again" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed login again again" />
+    <MESSAGE value="auto refresh token on accessing services, using refresh tokens" />
+    <option name="LAST_COMMIT_MESSAGE" value="auto refresh token on accessing services, using refresh tokens" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/FortniteApiImpl.kt</url>
-          <line>201</line>
+          <line>205</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">

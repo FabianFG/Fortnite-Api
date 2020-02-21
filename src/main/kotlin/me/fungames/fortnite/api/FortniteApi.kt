@@ -30,7 +30,7 @@ interface FortniteApi {
             return this
         }
 
-        fun build() = FortniteApiImpl().apply {
+        fun build() : FortniteApi = FortniteApiImpl().apply {
             if (clientToken != null) this.clientLauncherToken = clientToken!!
             if (this@Builder.email != null) this.email = this@Builder.email
             if (this@Builder.password != null) this.password = this@Builder.password

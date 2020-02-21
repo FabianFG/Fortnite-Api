@@ -41,15 +41,51 @@ class FortniteApiImpl internal constructor(): FortniteApi {
 
     override val accountPublicService: AccountPublicService
     override val affiliatePublicService : AffiliatePublicService
+        get() {
+            verifyToken()
+            return field
+        }
     override val catalogPublicService : CatalogPublicService
+        get() {
+            verifyToken()
+            return field
+        }
     override val epicGamesService : EpicGamesService
     override val eventsPublicService : EventsPublicService
+        get() {
+            verifyToken()
+            return field
+        }
     override val fortniteContentWebsiteService : FortniteContentWebsiteService
+        get() {
+            verifyToken()
+            return field
+        }
     override val fortnitePublicService : FortnitePublicService
+        get() {
+            verifyToken()
+            return field
+        }
     override val friendsPublicService : FriendsPublicService
+        get() {
+            verifyToken()
+            return field
+        }
     override val launcherPublicService: LauncherPublicService
+        get() {
+            verifyToken()
+            return field
+        }
     override val partyService : PartyService
+        get() {
+            verifyToken()
+            return field
+        }
     override val personaPublicService : PersonaPublicService
+        get() {
+            verifyToken()
+            return field
+        }
 
 
 
@@ -70,6 +106,9 @@ class FortniteApiImpl internal constructor(): FortniteApi {
             checkNotNull(epicAccountExpiresAtMillis) { "Api is not logged in" }
             return epicAccountExpiresAtMillis!!
         }
+
+    internal var email : String? = null
+    internal var password : String? = null
 
     private var epicAccountTokenType : String? = null
     private var accountExpiresAt: Date? = null
@@ -131,25 +170,45 @@ class FortniteApiImpl internal constructor(): FortniteApi {
         }
     }
 
-    override fun login(email: String, password: String, rememberMe: Boolean) {
+    override fun login(rememberMe: Boolean) {
+        val loginEmail = email
+        val loginPassword = password
+        if (loginEmail == null || loginPassword == null) {
+            return loginClientCredentials()
+        }
         val csrf = this.epicGamesService.csrfToken().execute()
         if (!csrf.isSuccessful)
             throw EpicErrorException(EpicError.parse(csrf))
         val xsrfToken = csrf.headers().toMultimap()["Set-Cookie"]?.first { it.startsWith("XSRF-TOKEN=") }?.substringAfter("XSRF-TOKEN=")?.substringBefore(';')
             ?: throw EpicErrorException("Failed to obtain xsrf token")
-        var login = this.epicGamesService.login(mapOf("email" to email, "password" to password, "rememberMe" to rememberMe.toString()), xsrfToken).execute()
+        val login = this.epicGamesService.login(mapOf("email" to loginEmail, "password" to loginPassword, "rememberMe" to rememberMe.toString()), xsrfToken).execute()
         if (login.code() == 409)
-            return login(email, password, rememberMe)
+            return login(rememberMe)
         if (!login.isSuccessful)
             throw EpicErrorException(EpicError.parse(login))
         val exchange = this.epicGamesService.exchange().execute()
         if (!exchange.isSuccessful)
             throw EpicErrorException(EpicError.parse(exchange))
         val exchangeCode = exchange.body()!!.code
-        val auth = this.accountPublicService.grantToken("basic ${Utils.CLIENT_LAUNCHER_TOKEN}", "exchange_code", mapOf("exchange_code" to exchangeCode, "token_type" to "eg1"), null).execute()
+        val auth = this.accountPublicService.grantToken("basic ${Utils.CLIENT_LAUNCHER_TOKEN}", "exchange_code", mapOf("exchange_code" to exchangeCode, "token_type" to "eg1"), false).execute()
         if (!auth.isSuccessful)
             throw EpicErrorException(EpicError.parse(auth))
         loginSucceeded(auth)
+    }
+
+    private fun verifyToken() {
+        require(isLoggedIn) { "Api is not logged in" }
+        if (System.currentTimeMillis() >= this.epicAccountExpiresAtMillis!!) {
+            val refresh = this.accountPublicService.grantToken("basic ${Utils.CLIENT_LAUNCHER_TOKEN}", "refresh_token", mapOf("refresh_token" to this.accountRefreshToken!!), null).execute()
+            if (!refresh.isSuccessful) {
+                System.err.println("Failed to use refresh token")
+                System.err.println(EpicError.parse(refresh).errorMessage)
+                System.err.println("Attempting to relogin")
+                login()
+                return
+            }
+            loginSucceeded(refresh)
+        }
     }
 
     private fun loginSucceeded(response: Response<LoginResponse>) {

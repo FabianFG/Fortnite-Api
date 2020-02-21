@@ -2,6 +2,7 @@ package me.fungames.fortnite.api.network
 
 import me.fungames.fortnite.api.FortniteApi
 import me.fungames.fortnite.api.events.LoggedOutEvent
+import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.net.HttpURLConnection
@@ -9,9 +10,11 @@ import java.net.HttpURLConnection
 
 class DefaultInterceptor(private val api: FortniteApi) : Interceptor {
 
+
+
     override fun intercept(chain: Interceptor.Chain): Response {
         val builder = chain.request().newBuilder()
-        if (api.isLoggedIn)
+        if (api.isLoggedIn && chain.request().url.toString() != "https://account-public-service-prod.ol.epicgames.com/account/api/oauth/token")
             builder.addHeader("Authorization", api.accountTokenType + " " + api.accountToken)
         builder.addHeader("Accept-Language", api.language)
 

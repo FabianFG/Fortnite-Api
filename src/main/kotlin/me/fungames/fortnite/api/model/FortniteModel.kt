@@ -6,6 +6,19 @@ import me.fungames.fortnite.api.model.notification.ProfileNotification
 import java.util.*
 import java.util.AbstractMap.SimpleEntry
 
+
+data class CloudStorageResponse (
+    val uniqueFilename : String,
+    val filename : String,
+    val hash : String,
+    val hash256 : String,
+    val length : Int,
+    val contentType : String,
+    val uploaded : String,
+    val storageType : String,
+    val doNotCache : Boolean
+)
+
 /**
  * As seen in the BR profile items' <tt>attributes</tt> object. Used to transfer variant data from/to the backend.
  */

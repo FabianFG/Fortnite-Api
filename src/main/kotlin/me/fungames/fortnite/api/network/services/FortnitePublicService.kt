@@ -3,6 +3,7 @@ package me.fungames.fortnite.api.network.services
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import me.fungames.fortnite.api.model.*
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -90,6 +91,12 @@ interface FortnitePublicService {
 
     @GET("/fortnite/api/storefront/v2/gift/check_eligibility/recipient/{recipientAccountId}/offer/{offerId}")
     fun checkGiftEligibility(@Path("recipientAccountId") recipientAccountId: String, @Path("offerId") offerId: String): Call<Void>
+
+    @GET("/fortnite/api/cloudstorage/system")
+    fun getCloudstorageList() : Call<List<CloudStorageResponse>>
+
+    @GET("/fortnite/api/cloudstorage/system/{uniqueFilename}")
+    fun downloadCloudstorageFile(@Path("uniqueFilename") uniqueFilename: String) : Call<ResponseBody>
 
     companion object {
         val BASE_URL = "https://fortnite-public-service-prod11.ol.epicgames.com"

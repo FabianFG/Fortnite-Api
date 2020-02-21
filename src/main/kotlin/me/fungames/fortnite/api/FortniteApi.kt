@@ -30,13 +30,17 @@ interface FortniteApi {
             return this
         }
 
-        fun build() = FortniteApiImpl().apply { if (clientToken != null) this.clientLauncherToken = clientToken!! }
+        fun build() = FortniteApiImpl().apply {
+            if (clientToken != null) this.clientLauncherToken = clientToken!!
+            if (this@Builder.email != null) this.email = this@Builder.email
+            if (this@Builder.password != null) this.password = this@Builder.password
+        }
 
         fun buildAndLogin(): FortniteApi {
             val api = build()
             if (loginAsUser) {
                 check(email != null && password != null) { "Logging in as user requires email and password" }
-                api.login(email!!, password!!)
+                api.login()
             } else {
                 api.loginClientCredentials()
             }
@@ -49,7 +53,7 @@ interface FortniteApi {
     @Throws(EpicErrorException::class)
     fun loginClientCredentials()
     @Throws(EpicErrorException::class)
-    fun login(email : String, password : String, rememberMe : Boolean = false)
+    fun login(rememberMe : Boolean = false)
 
     @Throws(EpicErrorException::class)
     fun logout()

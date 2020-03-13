@@ -2,6 +2,7 @@ package me.fungames.fortnite.api
 
 import me.fungames.fortnite.api.events.Event
 import me.fungames.fortnite.api.exceptions.EpicErrorException
+import me.fungames.fortnite.api.model.LoginResponse
 import me.fungames.fortnite.api.network.services.*
 
 
@@ -12,6 +13,7 @@ interface FortniteApi {
         private var password: String? = null
         private var loginAsUser : Boolean = true
         private var clientToken: String? = null
+        private var loginResponse : LoginResponse? = null
 
         fun email(email: String): Builder {
             this.email = email
@@ -25,6 +27,12 @@ interface FortniteApi {
             this.loginAsUser = loginAsUser
             return this
         }
+
+        fun initWithLogin(login : LoginResponse?): Builder {
+            this.loginResponse = login
+            return this
+        }
+
         fun clientToken(token: String): Builder {
             this.clientToken = token
             return this
@@ -34,14 +42,15 @@ interface FortniteApi {
             if (clientToken != null) this.clientLauncherToken = clientToken!!
             if (this@Builder.email != null) this.email = this@Builder.email
             if (this@Builder.password != null) this.password = this@Builder.password
+            if (this@Builder.loginResponse != null) this.loginSucceeded(loginResponse!!)
         }
 
         fun buildAndLogin(): FortniteApi {
             val api = build()
-            if (loginAsUser) {
+            if (loginAsUser && loginResponse == null) {
                 check(email != null && password != null) { "Logging in as user requires email and password" }
                 api.login()
-            } else {
+            } else if (loginResponse == null) {
                 api.loginClientCredentials()
             }
             return api

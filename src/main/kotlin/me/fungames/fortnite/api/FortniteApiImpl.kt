@@ -161,7 +161,7 @@ class FortniteApiImpl internal constructor(): FortniteApi {
         try {
             val response = loginRequest.execute()
             if (response.isSuccessful)
-                loginSucceeded(response)
+                loginSucceeded(response.body()!!)
             else
                 throw EpicErrorException(EpicError.parse(response))
 
@@ -170,11 +170,19 @@ class FortniteApiImpl internal constructor(): FortniteApi {
         }
     }
 
-    override fun login(rememberMe: Boolean) {
+    override fun login(rememberMe: Boolean) = login(rememberMe, 0)
+
+    fun login(rememberMe: Boolean, retryCount : Int) {
         val loginEmail = email
         val loginPassword = password
         if (loginEmail == null || loginPassword == null) {
             return loginClientCredentials()
+        }
+        val reputation = this.epicGamesService.captcha().execute()
+        if (!reputation.isSuccessful /*|| reputation.body()?.get("verdict")?.asBoolean == false*/) {
+            if (retryCount >= 10)
+                throw EpicErrorException("Failed to login to Epic Api: Captcha did not return allow")
+            else return login(rememberMe, retryCount + 1)
         }
         val csrf = this.epicGamesService.csrfToken().execute()
         if (!csrf.isSuccessful)
@@ -182,10 +190,16 @@ class FortniteApiImpl internal constructor(): FortniteApi {
         val xsrfToken = csrf.headers().toMultimap()["Set-Cookie"]?.first { it.startsWith("XSRF-TOKEN=") }?.substringAfter("XSRF-TOKEN=")?.substringBefore(';')
             ?: throw EpicErrorException("Failed to obtain xsrf token")
         val login = this.epicGamesService.login(mapOf("email" to loginEmail, "password" to loginPassword, "rememberMe" to rememberMe.toString()), xsrfToken).execute()
-        if (login.code() == 409)
-            return login(rememberMe)
-        if (!login.isSuccessful)
-            throw EpicErrorException(EpicError.parse(login))
+        if (login.code() == 409) {
+            if (retryCount >= 10)
+                throw EpicErrorException("Failed to login to Epic Api: Conflict 409")
+            else return login(rememberMe, retryCount + 1)
+        }
+        if (!login.isSuccessful) {
+            if (retryCount >= 10)
+                throw EpicErrorException("Failed to login to Epic Api: ${login.code()} ${EpicError.parse(login).errorMessage}")
+            else return login(rememberMe, retryCount + 1)
+        }
         val exchange = this.epicGamesService.exchange().execute()
         if (!exchange.isSuccessful)
             throw EpicErrorException(EpicError.parse(exchange))
@@ -193,7 +207,7 @@ class FortniteApiImpl internal constructor(): FortniteApi {
         val auth = this.accountPublicService.grantToken("basic ${Utils.CLIENT_LAUNCHER_TOKEN}", "exchange_code", mapOf("exchange_code" to exchangeCode, "token_type" to "eg1"), false).execute()
         if (!auth.isSuccessful)
             throw EpicErrorException(EpicError.parse(auth))
-        loginSucceeded(auth)
+        loginSucceeded(auth.body()!!)
     }
 
     private fun verifyToken() {
@@ -211,18 +225,17 @@ class FortniteApiImpl internal constructor(): FortniteApi {
                 login()
                 return
             }
-            loginSucceeded(refresh)
+            loginSucceeded(refresh.body()!!)
         }
     }
 
-    private fun loginSucceeded(response: Response<LoginResponse>) {
-        val data = response.body()!!
-        this.epicAccountAccessToken = data.access_token
-        this.accountExpiresAt = data.expires_at
-        this.epicAccountExpiresAtMillis = System.currentTimeMillis() + TimeUnit.MILLISECONDS.convert(data.expires_in.toLong(), TimeUnit.SECONDS)
-        this.accountId = data.account_id
-        this.accountRefreshToken = data.refresh_token
-        this.epicAccountTokenType = data.token_type
+    internal fun loginSucceeded(response: LoginResponse) {
+        this.epicAccountAccessToken = response.access_token
+        this.accountExpiresAt = response.expires_at
+        this.epicAccountExpiresAtMillis = System.currentTimeMillis() + TimeUnit.MILLISECONDS.convert(response.expires_in.toLong(), TimeUnit.SECONDS)
+        this.accountId = response.account_id
+        this.accountRefreshToken = response.refresh_token
+        this.epicAccountTokenType = response.token_type
         this.isLoggedIn = true
     }
 

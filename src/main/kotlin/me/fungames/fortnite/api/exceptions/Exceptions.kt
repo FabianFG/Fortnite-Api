@@ -1,6 +1,5 @@
 package me.fungames.fortnite.api.exceptions
 
-import sun.security.krb5.KrbException.errorMessage
 import me.fungames.fortnite.api.model.EpicError
 
 

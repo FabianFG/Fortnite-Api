@@ -110,12 +110,15 @@ class FortniteApiImpl internal constructor(): FortniteApi {
     internal var email : String? = null
     internal var password : String? = null
 
+    internal var accountId : String? = null
+    internal var deviceId : String? = null
+    internal var secret : String? = null
+
     private var epicAccountTokenType : String? = null
     private var accountExpiresAt: Date? = null
     private var epicAccountExpiresAtMillis: Long? = null
     private var accountRefreshToken: String? = null
     private var epicAccountAccessToken: String? = null
-    private var accountId: String? = null
 
     init {
         val retrofitBuilder = Retrofit.Builder().client(httpClient).addConverterFactory(GsonConverterFactory.create(gson))
@@ -154,7 +157,30 @@ class FortniteApiImpl internal constructor(): FortniteApi {
                 PersonaPublicService::class.java)
     }
 
-    @Throws(EpicErrorException::class)
+    override fun loginDeviceAuth() {
+        if (accountId == null || deviceId == null || secret == null)
+            throw EpicErrorException("To use device auth, account id, device id and secret must be defined")
+        val deviceAuthLogin = this.accountPublicService.grantToken("basic ${Utils.KAIROS_WEB_TOKEN}", "device_auth", mapOf("account_id" to accountId!!, "device_id" to deviceId!!, "secret" to secret!!, "token_type" to "eg1"), null).execute()
+        if (!deviceAuthLogin.isSuccessful)
+            throw EpicErrorException(EpicError.parse(deviceAuthLogin))
+        loginSucceeded(deviceAuthLogin.body()!!)
+        val exchange = this.accountPublicService.exchangeToken().execute()
+        if (!exchange.isSuccessful)
+            throw EpicErrorException(EpicError.parse(deviceAuthLogin))
+        val exchangeCode = exchange.body()!!.code
+        val loginRequest = this.accountPublicService.grantToken("basic $clientLauncherToken", "exchange_code", mapOf("exchange_code" to exchangeCode), null)
+        try {
+            val response = loginRequest.execute()
+            if (response.isSuccessful)
+                loginSucceeded(response.body()!!)
+            else
+                throw EpicErrorException(EpicError.parse(response))
+
+        } catch (e: IOException) {
+            throw EpicErrorException(e)
+        }
+    }
+
     override fun loginClientCredentials() {
         val loginRequest =
             this.accountPublicService.grantToken("basic $clientLauncherToken", "client_credentials", emptyMap(), false)
@@ -172,11 +198,14 @@ class FortniteApiImpl internal constructor(): FortniteApi {
 
     override fun login(rememberMe: Boolean) = login(rememberMe, 0)
 
-    fun login(rememberMe: Boolean, retryCount : Int) {
+    fun login(rememberMe: Boolean, retryCount : Int, overrideXsrfToken : String? = null) {
         val loginEmail = email
         val loginPassword = password
         if (loginEmail == null || loginPassword == null) {
-            return loginClientCredentials()
+            return if (accountId != null && deviceId != null && secret != null)
+                loginDeviceAuth()
+            else
+                loginClientCredentials()
         }
         val reputation = this.epicGamesService.captcha().execute()
         if (!reputation.isSuccessful /*|| reputation.body()?.get("verdict")?.asBoolean == false*/) {
@@ -184,16 +213,21 @@ class FortniteApiImpl internal constructor(): FortniteApi {
                 throw EpicErrorException("Failed to login to Epic Api: Captcha did not return allow")
             else return login(rememberMe, retryCount + 1)
         }
-        val csrf = this.epicGamesService.csrfToken().execute()
-        if (!csrf.isSuccessful)
-            throw EpicErrorException(EpicError.parse(csrf))
-        val xsrfToken = csrf.headers().toMultimap()["Set-Cookie"]?.first { it.startsWith("XSRF-TOKEN=") }?.substringAfter("XSRF-TOKEN=")?.substringBefore(';')
-            ?: throw EpicErrorException("Failed to obtain xsrf token")
+
+        var xsrfToken = overrideXsrfToken
+        if (xsrfToken == null) {
+            val csrf = this.epicGamesService.csrfToken().execute()
+            if (!csrf.isSuccessful)
+                throw EpicErrorException(EpicError.parse(csrf))
+            xsrfToken = csrf.headers().toMultimap()["Set-Cookie"]?.first { it.startsWith("XSRF-TOKEN=") }
+                ?.substringAfter("XSRF-TOKEN=")?.substringBefore(';')
+                ?: throw EpicErrorException("Failed to obtain xsrf token")
+        }
         val login = this.epicGamesService.login(mapOf("email" to loginEmail, "password" to loginPassword, "rememberMe" to rememberMe.toString()), xsrfToken).execute()
         if (login.code() == 409) {
             if (retryCount >= 10)
                 throw EpicErrorException("Failed to login to Epic Api: Conflict 409")
-            else return login(rememberMe, retryCount + 1)
+            else return login(rememberMe, retryCount + 1, xsrfToken)
         }
         if (!login.isSuccessful) {
             if (retryCount >= 10)
@@ -245,5 +279,6 @@ class FortniteApiImpl internal constructor(): FortniteApi {
 
     override fun fireEvent(event: Event) {
         println("Received " + event::class.java.simpleName)
+        verifyToken()
     }
 }

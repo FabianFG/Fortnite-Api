@@ -15,6 +15,10 @@ interface FortniteApi {
         private var clientToken: String? = null
         private var loginResponse : LoginResponse? = null
 
+        private var accountId : String? = null
+        private var deviceId : String? = null
+        private var secret : String? = null
+
         fun email(email: String): Builder {
             this.email = email
             return this
@@ -25,6 +29,13 @@ interface FortniteApi {
         }
         fun loginAsUser(loginAsUser : Boolean): Builder {
             this.loginAsUser = loginAsUser
+            return this
+        }
+
+        fun loginWithDeviceAuth(accountId: String, deviceId: String, secret: String) : Builder {
+            this.accountId = accountId
+            this.deviceId = deviceId
+            this.secret = secret
             return this
         }
 
@@ -42,14 +53,21 @@ interface FortniteApi {
             if (clientToken != null) this.clientLauncherToken = clientToken!!
             if (this@Builder.email != null) this.email = this@Builder.email
             if (this@Builder.password != null) this.password = this@Builder.password
+            if (this@Builder.accountId != null) this.accountId = this@Builder.accountId
+            if (this@Builder.deviceId != null) this.deviceId = this@Builder.deviceId
+            if (this@Builder.secret != null) this.secret = this@Builder.secret
             if (this@Builder.loginResponse != null) this.loginSucceeded(loginResponse!!)
         }
 
         fun buildAndLogin(): FortniteApi {
             val api = build()
             if (loginAsUser && loginResponse == null) {
-                check(email != null && password != null) { "Logging in as user requires email and password" }
-                api.login()
+                if (accountId != null && deviceId != null && secret != null) {
+                    api.loginDeviceAuth()
+                } else {
+                    check(email != null && password != null) { "Logging in as user requires email and password" }
+                    api.login()
+                }
             } else if (loginResponse == null) {
                 api.loginClientCredentials()
             }
@@ -61,6 +79,10 @@ interface FortniteApi {
 
     @Throws(EpicErrorException::class)
     fun loginClientCredentials()
+
+    @Throws(EpicErrorException::class)
+    fun loginDeviceAuth()
+
     @Throws(EpicErrorException::class)
     fun login(rememberMe : Boolean = false)
 

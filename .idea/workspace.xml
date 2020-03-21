@@ -4,8 +4,6 @@
     <list default="true" id="b9c99041-fe2d-4a6f-8e2f-366b90b36854" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/FortniteApi.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/FortniteApi.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/FortniteApiImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/FortniteApiImpl.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/Utils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/me/fungames/fortnite/api/Utils.kt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -20,7 +18,7 @@
     </execution>
   </component>
   <component name="DarkyenusTimeTracker">
-    <option name="totalTimeSeconds" value="3275" />
+    <option name="totalTimeSeconds" value="3642" />
   </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
@@ -107,7 +105,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Kotlin.TestKt">
+  <component name="RunManager" selected="Gradle.Fortnite-Api [bintrayUpload]">
     <configuration name="Fortnite-Api [bintrayUpload]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -211,7 +209,8 @@
       <workItem from="1584431943439" duration="1350000" />
       <workItem from="1584462189890" duration="1236000" />
       <workItem from="1584536981295" duration="1238000" />
-      <workItem from="1584609817352" duration="6185000" />
+      <workItem from="1584609817352" duration="6998000" />
+      <workItem from="1584791417190" duration="159000" />
     </task>
     <task id="LOCAL-00001" summary="first release and builder">
       <created>1573936210358</created>
@@ -325,7 +324,14 @@
       <option name="project" value="LOCAL" />
       <updated>1584108728957</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="support for logging in using device auth">
+      <created>1584649590338</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1584649590338</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -360,7 +366,8 @@
     <MESSAGE value="small bug fixes" />
     <MESSAGE value="login with previous login response" />
     <MESSAGE value="forgot version" />
-    <option name="LAST_COMMIT_MESSAGE" value="forgot version" />
+    <MESSAGE value="support for logging in using device auth" />
+    <option name="LAST_COMMIT_MESSAGE" value="support for logging in using device auth" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

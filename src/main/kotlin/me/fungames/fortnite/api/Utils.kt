@@ -2,10 +2,11 @@ package me.fungames.fortnite.api
 
 import java.io.File
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 
 
 object Utils {
-    val DEFAULT_GSON = Gson()
+    val DEFAULT_GSON = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create()
 
     val CLIENT_LAUNCHER_TOKEN =
         "MzQ0NmNkNzI2OTRjNGE0NDg1ZDgxYjc3YWRiYjIxNDE6OTIwOWQ0YTVlMjVhNDU3ZmI5YjA3NDg5ZDMxM2I0MWE"

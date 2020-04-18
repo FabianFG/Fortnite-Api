@@ -93,30 +93,30 @@ data class FortCatalogResponse(
         var appStoreId: List<String>,
         var requirements: List<Requirement>,
         var metaInfo: List<SimpleEntry<String, String>>,
-        var catalogGroup: String,
+        var catalogGroup: String?,
         var catalogGroupPriority: Int,
         var sortPriority: Int,
-        var title: String,
-        var shortDescription: String,
-        var description: String,
+        var title: String?,
+        var shortDescription: String?,
+        var description: String?,
         var displayAssetPath: String?,
         var itemGrants: List<FortItemStack>,
 
         //***BRWeeklyStorefront***
         var fulfillmentIds: List<String>,
-        var dynamicBundleInfo: DynamicBundleInfo,
+        var dynamicBundleInfo: DynamicBundleInfo?,
         // ex: "meta":{
         //     "BannerOverride":"NewStyle"
         //     "StoreToastHeader":"Updated",
         //     "StoreToastBody":"ItemIsBack"
         // }
-        var meta: JsonObject,
-        var matchFilter: String,
+        var meta: JsonObject?,
+        var matchFilter: String?,
         var filterWeight: Float,
-        var giftInfo: GiftInfo,
+        var giftInfo: GiftInfo?,
         var refundable: Boolean,
         // ex: com.epicgames.fortnite.core.game.fulfillments.BattlePassTierFulfillment
-        var fulfillmentClass: String
+        var fulfillmentClass: String?
     )
 
     data class Price(

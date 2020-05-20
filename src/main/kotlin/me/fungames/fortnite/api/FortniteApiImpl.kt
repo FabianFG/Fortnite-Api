@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit
 
 class FortniteApiImpl internal constructor(): FortniteApi {
 
-    var clientLauncherToken: String = Utils.CLIENT_LAUNCHER_TOKEN
+    var clientLauncherToken: String = ClientToken.FN_IOS_GAME_CLIENT.token
 
     override var isLoggedIn = false
         private set
@@ -157,10 +157,10 @@ class FortniteApiImpl internal constructor(): FortniteApi {
                 PersonaPublicService::class.java)
     }
 
-    override fun loginDeviceAuth() {
+    override fun loginDeviceAuth(token: ClientToken) {
         if (accountId == null || deviceId == null || secret == null)
             throw EpicErrorException("To use device auth, account id, device id and secret must be defined")
-        val deviceAuthLogin = this.accountPublicService.grantToken("basic ${Utils.KAIROS_WEB_TOKEN}", "device_auth", mapOf("account_id" to accountId!!, "device_id" to deviceId!!, "secret" to secret!!, "token_type" to "eg1"), null).execute()
+        val deviceAuthLogin = this.accountPublicService.grantToken("basic ${token.token}", "device_auth", mapOf("account_id" to accountId!!, "device_id" to deviceId!!, "secret" to secret!!, "token_type" to "eg1"), null).execute()
         if (!deviceAuthLogin.isSuccessful)
             throw EpicErrorException(EpicError.parse(deviceAuthLogin))
         loginSucceeded(deviceAuthLogin.body()!!)

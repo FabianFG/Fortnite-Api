@@ -81,7 +81,7 @@ interface FortniteApi {
     fun loginClientCredentials()
 
     @Throws(EpicErrorException::class)
-    fun loginDeviceAuth()
+    fun loginDeviceAuth(token: ClientToken = ClientToken.KAIROS_PC)
 
     @Throws(EpicErrorException::class)
     fun login(rememberMe : Boolean = false)

@@ -2,7 +2,7 @@ package me.fungames.fortnite.api
 
 import java.util.*
 
-enum class ClientToken(val id: String, val secret: String) {
+enum class ClientToken(val id: String, secret: String) {
 
     FN_PC_GAME_CLIENT("ec684b8c687f479fadea3cb2ad83f5c6", "e1f31c211f28413186262d37a13fc84d"),
     FN_IOS_GAME_CLIENT("3446cd72694c4a4485d81b77adbb2141", "9209d4a5e25a457fb9b07489d313b41a"),
@@ -21,6 +21,6 @@ enum class ClientToken(val id: String, val secret: String) {
     EOS_SDK_AUTH_TOOL("8f50327ba00d4ebeb81991ee04a42fc1", "0b0d21c7-c195-4c75-abb0-00ebc36b60f5"),
     EOS_SDK_AUTH_TOOL_GAMEDEV("dc1b76662b824a11a3de81b7aabc2169", "3ed26ae3-c7fc-4fea-949a-dc6b7cee7b25");
 
-    val token: String = Base64.getEncoder().encode("$id:$secret".toByteArray()).toString()
+    val token: String = Base64.getEncoder().encodeToString("$id:$secret".toByteArray())
 
 }

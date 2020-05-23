@@ -65,6 +65,10 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.2.2'
+    implementation 'org.igniterealtime.smack:smack-java7:4.3.4'
+    implementation 'org.igniterealtime.smack:smack-tcp:4.3.4'
+    implementation 'org.igniterealtime.smack:smack-extensions:4.3.4'
+    implementation 'com.google.guava:guava:29.0-jre'
 }
 
 compileKotlin {

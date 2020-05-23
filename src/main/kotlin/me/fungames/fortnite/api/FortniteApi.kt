@@ -53,7 +53,7 @@ interface FortniteApi {
             if (clientToken != null) this.clientLauncherToken = clientToken!!
             if (this@Builder.email != null) this.email = this@Builder.email
             if (this@Builder.password != null) this.password = this@Builder.password
-            if (this@Builder.accountId != null) this.accountId = this@Builder.accountId
+            if (this@Builder.accountId != null) this.epicAccountId = this@Builder.accountId
             if (this@Builder.deviceId != null) this.deviceId = this@Builder.deviceId
             if (this@Builder.secret != null) this.secret = this@Builder.secret
             if (this@Builder.loginResponse != null) this.loginSucceeded(loginResponse!!)
@@ -91,6 +91,8 @@ interface FortniteApi {
 
     fun fireEvent(event: Event)
 
+    val xmppService: XMPPService
+
     //All the Services available
     val accountPublicService: AccountPublicService
     val affiliatePublicService : AffiliatePublicService
@@ -104,7 +106,7 @@ interface FortniteApi {
     val partyService : PartyService
     val personaPublicService : PersonaPublicService
 
-
+    val accountId: String
     var language: String
     val accountTokenType: String
     val accountToken: String

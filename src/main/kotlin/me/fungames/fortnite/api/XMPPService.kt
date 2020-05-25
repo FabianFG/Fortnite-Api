@@ -29,11 +29,11 @@ open class PartyEvent(@SerializedName("party_id") var partyId: String = "") {
 data class PartyMemberEvent(@SerializedName("account_id") var accountId: String = ""): PartyEvent()
 data class InviteChangeEvent(@SerializedName("invitee_id") var inviteeId: String = "")
 data class PingEvent(@SerializedName("pinger_id") var pingerId: String = "")
-data class FriendEvent(val to: String? = "",
-                       val from: String? = "",
-                       val reason: String? = "",
-                       val status: String? = "",
-                       val timestamp: String? = "")
+data class FriendEvent(val to: String = "",
+                       val from: String = "",
+                       val reason: String = "",
+                       val status: String = "",
+                       val timestamp: String = "")
 
 sealed class NotificationType<T: Any>(val clazz: KClass<T>) {
 

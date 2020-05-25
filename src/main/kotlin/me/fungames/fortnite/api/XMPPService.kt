@@ -1,10 +1,10 @@
-@file:Suppress("UnstableApiUsage")
+@file:Suppress("UnstableApiUsage", "UNCHECKED_CAST")
 
 package me.fungames.fortnite.api
 
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import me.fungames.fortnite.api.events.Event
+import com.google.gson.annotations.SerializedName
 import org.jivesoftware.smack.AbstractXMPPConnection
 import org.jivesoftware.smack.StanzaListener
 import org.jivesoftware.smack.chat2.ChatManager
@@ -17,106 +17,57 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration
 import org.jivesoftware.smackx.ping.PingManager
 import org.jxmpp.jid.impl.JidCreate
 import java.util.*
+import kotlin.reflect.KClass
+import kotlin.reflect.full.isSubclassOf
 
-abstract class JsonEvent(val jsonObject: JsonObject): Event
-
-open class PartyEvent(jsonObject: JsonObject): JsonEvent(jsonObject) {
-    val partyId: String = jsonObject["party_id"].asString!!
+open class PartyEvent(@SerializedName("party_id") var partyId: String = "") {
     override fun toString(): String {
         return "PartyEvent(partyId='$partyId')"
     }
 }
 
-class PartyMemberEvent(jsonObject: JsonObject): PartyEvent(jsonObject) {
-    val accountId: String = jsonObject["account_id"].asString!!
-    override fun toString(): String {
-        return "PartyMemberEvent(accountId='$accountId') ${super.toString()}"
-    }
-}
+data class PartyMemberEvent(@SerializedName("account_id") var accountId: String = ""): PartyEvent()
+data class InviteChangeEvent(@SerializedName("invitee_id") var inviteeId: String = "")
+data class PingEvent(@SerializedName("pinger_id") var pingerId: String = "")
+data class FriendEvent(val to: String?,
+                       val from: String?,
+                       val reason: String?,
+                       val status: String?)
 
-class InviteChangeEvent(jsonObject: JsonObject): JsonEvent(jsonObject) {
-    val inviteeId: String = jsonObject["invitee_id"].asString!!
-    override fun toString(): String {
-        return "InviteChangeEvent(inviteeId='$inviteeId')"
-    }
-}
+sealed class NotificationType<T: Any>(val clazz: KClass<T>) {
 
-class PingEvent(jsonObject: JsonObject): JsonEvent(jsonObject) {
-    val pingerId: String = jsonObject["pinger_id"].asString!!
-    override fun toString(): String {
-        return "PingEvent(pingerId='$pingerId')"
-    }
-}
+    object PING: NotificationType<PingEvent>(PingEvent::class)
+    object MEMBER_LEFT: NotificationType<PartyMemberEvent>(PartyMemberEvent::class)
+    object MEMBER_EXPIRED: NotificationType<PartyMemberEvent>(PartyMemberEvent::class)
+    object MEMBER_NEW_CAPTAIN: NotificationType<PartyMemberEvent>(PartyMemberEvent::class)
+    object MEMBER_KICKED: NotificationType<PartyMemberEvent>(PartyMemberEvent::class)
+    object MEMBER_DISCONNECTED: NotificationType<PartyMemberEvent>(PartyMemberEvent::class)
+    object PARTY_UPDATED: NotificationType<PartyEvent>(PartyEvent::class)
+    object MEMBER_STATE_UPDATED: NotificationType<PartyMemberEvent>(PartyMemberEvent::class)
+    object MEMBER_JOINED: NotificationType<PartyMemberEvent>(PartyMemberEvent::class)
+    object MEMBER_REQUIRE_CONFIRMATION: NotificationType<PartyMemberEvent>(PartyMemberEvent::class)
+    object INVITE_CANCELLED: NotificationType<InviteChangeEvent>(InviteChangeEvent::class)
+    object INVITE_DECLINED: NotificationType<InviteChangeEvent>(InviteChangeEvent::class)
+    object FRIENDSHIP_REMOVE: NotificationType<FriendEvent>(FriendEvent::class)
+    object FRIENDSHIP_REQUEST: NotificationType<FriendEvent>(FriendEvent::class)
+    object UNKNOWN: NotificationType<JsonObject>(JsonObject::class)
 
-class FriendEvent(jsonObject: JsonObject): JsonEvent(jsonObject) {
-    val to: String? = jsonObject["to"].asString
-    val from: String? = jsonObject["from"].asString
-    val reason: String? = jsonObject["reason"].asString
-    val status: String? = jsonObject["status"].asString
-    override fun toString(): String {
-        return "FriendEvent(to=$to, from=$from, reason=$reason, status=$status)"
-    }
-}
-
-enum class NotificationType(insideParty: Boolean = true, val type: Class<out JsonEvent> = PartyMemberEvent::class.java) {
-
-    PING(type = PingEvent::class.java),
-    MEMBER_LEFT,
-    MEMBER_EXPIRED,
-    MEMBER_NEW_CAPTAIN,
-    MEMBER_KICKED,
-    MEMBER_DISCONNECTED,
-    PARTY_UPDATED(type = PartyEvent::class.java),
-    MEMBER_STATE_UPDATED,
-    MEMBER_JOINED,
-    MEMBER_REQUIRE_CONFIRMATION,
-    INVITE_CANCELLED(type = InviteChangeEvent::class.java),
-    INVITE_DECLINED(type = InviteChangeEvent::class.java),
-    FRIENDSHIP_REMOVE(false, FriendEvent::class.java),
-    FRIENDSHIP_REQUEST(false, FriendEvent::class.java),
-    UNKNOWN(false);
-
-    val id = if (insideParty) "com.epicgames.social.party.notification.v0.$name" else name
-
-    private val listeners: MutableList<JsonEvent.() -> Unit> = mutableListOf()
-
-    @Suppress("UNCHECKED_CAST")
-    fun <T: JsonEvent> listen(block: T.() -> Unit) {
-        listeners.add {
-            block(this as T)
-        }
-    }
-
-    internal fun fire(obj: JsonObject) {
-        listeners.forEach {
-            it(this.type.getConstructor(JsonEvent::class.java).newInstance(obj))
-        }
-    }
+    val name = if (clazz.isSubclassOf(PartyEvent::class)) "com.epicgames.social.party" +
+            ".notification.v0.${this::class.simpleName}" else this::class.simpleName
 
     companion object {
-        fun from(str: String): NotificationType {
+        fun values(): List<NotificationType<*>> = NotificationType::class.sealedSubclasses.mapNotNull { it.objectInstance }
+        fun from(str: String): NotificationType<*> {
             for (value in values()) {
-                if (value.id == str) {
-                    return value
-                }
+                if (value.name == str) return value
             }
             return UNKNOWN
-        }
-        fun listenToAll(block: JsonEvent.() -> Unit) {
-            values().forEach {
-                it.listen<JsonEvent> {
-                    block(this)
-                }
-            }
         }
     }
 
 }
 
 fun Message.bodyAsJson(): JsonObject = Gson().fromJson(this.body, JsonObject::class.java)
-
-data class MessageReceivedEvent(val accountId: String, val msg: String): Event
-data class NotificationReceivedEvent(val type: NotificationType, val msg: Message): Event
 
 class XMPPService(val api: FortniteApi): StanzaListener {
 
@@ -141,10 +92,27 @@ class XMPPService(val api: FortniteApi): StanzaListener {
         roster = Roster.getInstanceFor(connection)
     }
 
+    private val listeners: MutableMap<NotificationType<*>, Any.() -> Unit> = mutableMapOf()
+
+    fun <T: Any> listen(type: NotificationType<T>, block: T.() -> Unit) {
+        listeners[type] = {
+            block(this as T)
+        }
+    }
+
+    fun <T: Any> fire(type: NotificationType<T>, str: String) {
+        listeners.forEach {
+            if (it.key == type) {
+                val body = Gson().fromJson(str, type.clazz.java)
+                it.value(body as Any)
+            }
+        }
+    }
+
     override fun processStanza(packet: Stanza) {
         val msg = packet as Message
         val body = msg.bodyAsJson()
-        if (body.has("type")) NotificationType.from(body["type"].asString).fire(body)
+        if (body.has("type")) fire(NotificationType.from(body["type"].asString), msg.body)
     }
 
     fun sendMessage(accountId: String, msg: String) = chat.chatWith(JidCreate.entityBareFrom("$accountId:prod.ol.epicgames.com")).send(msg)

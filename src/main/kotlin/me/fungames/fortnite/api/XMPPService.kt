@@ -100,7 +100,7 @@ class XMPPService(val api: FortniteApi): StanzaListener {
         }
     }
 
-    fun <T: Any> fire(type: NotificationType<T>, str: String) {
+    private fun <T: Any> fire(type: NotificationType<T>, str: String) {
         listeners.forEach {
             if (it.key == type) {
                 val body = Gson().fromJson(str, type.clazz.java)

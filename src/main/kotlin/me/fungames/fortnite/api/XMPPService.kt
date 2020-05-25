@@ -10,6 +10,7 @@ import org.jivesoftware.smack.StanzaListener
 import org.jivesoftware.smack.chat2.ChatManager
 import org.jivesoftware.smack.filter.MessageTypeFilter
 import org.jivesoftware.smack.packet.Message
+import org.jivesoftware.smack.packet.Presence
 import org.jivesoftware.smack.packet.Stanza
 import org.jivesoftware.smack.roster.Roster
 import org.jivesoftware.smack.tcp.XMPPTCPConnection
@@ -122,5 +123,9 @@ class XMPPService(val api: FortniteApi): StanzaListener {
     }
 
     fun sendMessage(accountId: String, msg: String) = chat.chatWith(JidCreate.entityBareFrom("$accountId:prod.ol.epicgames.com")).send(msg)
+
+    fun setStatus(msg: String) = connection.sendStanza(Presence(Presence.Type.available).apply {
+        this.status = msg
+    })
 
 }

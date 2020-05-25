@@ -54,7 +54,9 @@ sealed class NotificationType<T: Any>(val clazz: KClass<T>) {
     object FRIENDSHIP_REQUEST: NotificationType<FriendEvent>(FriendEvent::class)
     object UNKNOWN: NotificationType<JsonObject>(JsonObject::class)
 
-    val name = if (clazz.isSubclassOf(PartyEvent::class)) "com.epicgames.social.party" +
+    val name = if (clazz.isSubclassOf(PartyEvent::class) || clazz == PingEvent::class) "com" +
+            ".epicgames" +
+            ".social.party" +
             ".notification.v0.${this::class.simpleName}" else this::class.simpleName
 
     companion object {

@@ -2,12 +2,9 @@
 
 package me.fungames.fortnite.api
 
-import com.google.common.eventbus.EventBus
-import com.google.common.eventbus.Subscribe
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import me.fungames.fortnite.api.events.Event
-import me.fungames.fortnite.api.events.PartyEventListener
 import org.jivesoftware.smack.AbstractXMPPConnection
 import org.jivesoftware.smack.StanzaListener
 import org.jivesoftware.smack.chat2.ChatManager
@@ -21,25 +18,80 @@ import org.jivesoftware.smackx.ping.PingManager
 import org.jxmpp.jid.impl.JidCreate
 import java.util.*
 
-enum class NotificationType(insideParty: Boolean = true) {
+abstract class JsonEvent(val jsonObject: JsonObject): Event
 
-    PING,
+open class PartyEvent(jsonObject: JsonObject): JsonEvent(jsonObject) {
+    val partyId: String = jsonObject["party_id"].asString!!
+    override fun toString(): String {
+        return "PartyEvent(partyId='$partyId')"
+    }
+}
+
+class PartyMemberEvent(jsonObject: JsonObject): PartyEvent(jsonObject) {
+    val accountId: String = jsonObject["account_id"].asString!!
+    override fun toString(): String {
+        return "PartyMemberEvent(accountId='$accountId') ${super.toString()}"
+    }
+}
+
+class InviteChangeEvent(jsonObject: JsonObject): JsonEvent(jsonObject) {
+    val inviteeId: String = jsonObject["invitee_id"].asString!!
+    override fun toString(): String {
+        return "InviteChangeEvent(inviteeId='$inviteeId')"
+    }
+}
+
+class PingEvent(jsonObject: JsonObject): JsonEvent(jsonObject) {
+    val pingerId: String = jsonObject["pinger_id"].asString!!
+    override fun toString(): String {
+        return "PingEvent(pingerId='$pingerId')"
+    }
+}
+
+class FriendEvent(jsonObject: JsonObject): JsonEvent(jsonObject) {
+    val to: String? = jsonObject["to"].asString
+    val from: String? = jsonObject["from"].asString
+    val reason: String? = jsonObject["reason"].asString
+    val status: String? = jsonObject["status"].asString
+    override fun toString(): String {
+        return "FriendEvent(to=$to, from=$from, reason=$reason, status=$status)"
+    }
+}
+
+enum class NotificationType(insideParty: Boolean = true, val type: Class<out JsonEvent> = PartyMemberEvent::class.java) {
+
+    PING(type = PingEvent::class.java),
     MEMBER_LEFT,
     MEMBER_EXPIRED,
     MEMBER_NEW_CAPTAIN,
     MEMBER_KICKED,
     MEMBER_DISCONNECTED,
-    PARTY_UPDATED,
+    PARTY_UPDATED(type = PartyEvent::class.java),
     MEMBER_STATE_UPDATED,
     MEMBER_JOINED,
     MEMBER_REQUIRE_CONFIRMATION,
-    INVITE_CANCELLED,
-    INVITE_DECLINED,
-    FRIENDSHIP_REMOVE(false),
-    FRIENDSHIP_REQUEST(false),
+    INVITE_CANCELLED(type = InviteChangeEvent::class.java),
+    INVITE_DECLINED(type = InviteChangeEvent::class.java),
+    FRIENDSHIP_REMOVE(false, FriendEvent::class.java),
+    FRIENDSHIP_REQUEST(false, FriendEvent::class.java),
     UNKNOWN(false);
 
     val id = if (insideParty) "com.epicgames.social.party.notification.v0.$name" else name
+
+    private val listeners: MutableList<JsonEvent.() -> Unit> = mutableListOf()
+
+    @Suppress("UNCHECKED_CAST")
+    fun <T: JsonEvent> listen(block: T.() -> Unit) {
+        listeners.add {
+            block(this as T)
+        }
+    }
+
+    internal fun fire(obj: JsonObject) {
+        listeners.forEach {
+            it(this.type.getConstructor(JsonEvent::class.java).newInstance(obj))
+        }
+    }
 
     companion object {
         fun from(str: String): NotificationType {
@@ -49,6 +101,13 @@ enum class NotificationType(insideParty: Boolean = true) {
                 }
             }
             return UNKNOWN
+        }
+        fun listenToAll(block: JsonEvent.() -> Unit) {
+            values().forEach {
+                it.listen<JsonEvent> {
+                    block(this)
+                }
+            }
         }
     }
 
@@ -65,10 +124,6 @@ class XMPPService(val api: FortniteApi): StanzaListener {
     val chat: ChatManager
     val roster: Roster
 
-    val bus = EventBus().apply {
-        register(this@XMPPService)
-    }
-
     init {
         connection = XMPPTCPConnection(XMPPTCPConnectionConfiguration
                 .builder()
@@ -83,25 +138,15 @@ class XMPPService(val api: FortniteApi): StanzaListener {
         connection.connect().login(api.accountId, api.accountToken)
         PingManager.getInstanceFor(connection).pingInterval = 60
         chat = ChatManager.getInstanceFor(connection)
-        chat.addIncomingListener { from, message, chat ->
-            bus.post(MessageReceivedEvent(from.localpart.asUnescapedString(), message.body))
-        }
         roster = Roster.getInstanceFor(connection)
-        bus.register(PartyEventListener(this))
     }
 
     override fun processStanza(packet: Stanza) {
         val msg = packet as Message
         val body = msg.bodyAsJson()
-        if (body.has("type")) bus.post(NotificationReceivedEvent(NotificationType.from(body["type"].asString), msg))
+        if (body.has("type")) NotificationType.from(body["type"].asString).fire(body)
     }
 
     fun sendMessage(accountId: String, msg: String) = chat.chatWith(JidCreate.entityBareFrom("$accountId:prod.ol.epicgames.com")).send(msg)
 
-}
-
-object DebugEventListener {
-    @Subscribe fun onEvent(event: Event) {
-        println(event)
-    }
 }

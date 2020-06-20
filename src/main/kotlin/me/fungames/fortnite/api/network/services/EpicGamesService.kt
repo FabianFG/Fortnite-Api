@@ -20,6 +20,6 @@ interface EpicGamesService {
     @POST("/id/api/login")
     fun login(@FieldMap fields: Map<String, String>, @Header("X-XSRF-TOKEN") xsfrToken : String) : Call<Void>
 
-    @GET("/id/api/exchange")
+    @POST("/id/api/exchange/generate")
     fun exchange() : Call<EpicExchangeCode>
 }

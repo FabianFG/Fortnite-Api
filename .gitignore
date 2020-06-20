@@ -1,0 +1,19 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Maven (Public, with public gitignore) template
+# Created by .ignore support plugin (hsz.mobi)
+### Maven (Public) template
+# Created by .ignore support plugin (hsz.mobi)
+### Maven template
+# Created by .ignore support plugin (hsz.mobi)
+### Default template
+/*
+!/src
+!build.gradle
+!*.project
+!/gradle
+!gradlew
+!gradlew.bat
+!/pom.xml
+!/README.md
+!/LICENSE.txt
+!/.gitignore

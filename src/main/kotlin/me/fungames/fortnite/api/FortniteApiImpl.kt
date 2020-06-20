@@ -14,7 +14,6 @@ import me.fungames.fortnite.api.network.DefaultInterceptor
 import me.fungames.fortnite.api.network.services.*
 import okhttp3.Cache
 import okhttp3.JavaNetCookieJar
-import retrofit2.Response
 import java.net.CookieManager
 import java.net.CookiePolicy
 import java.util.*
@@ -23,7 +22,7 @@ import java.util.concurrent.TimeUnit
 
 class FortniteApiImpl internal constructor(): FortniteApi {
 
-    var clientLauncherToken: String = Utils.CLIENT_LAUNCHER_TOKEN
+    var clientLauncherToken: String = ClientToken.FN_IOS_GAME_CLIENT.token
 
     override var isLoggedIn = false
         private set
@@ -107,10 +106,16 @@ class FortniteApiImpl internal constructor(): FortniteApi {
             return epicAccountExpiresAtMillis!!
         }
 
+    override val accountId: String
+        get() {
+            checkNotNull(epicAccountId) { "Api is not logged in" }
+            return epicAccountId!!
+        }
+
     internal var email : String? = null
     internal var password : String? = null
 
-    internal var accountId : String? = null
+    internal var epicAccountId: String? = null
     internal var deviceId : String? = null
     internal var secret : String? = null
 
@@ -157,10 +162,10 @@ class FortniteApiImpl internal constructor(): FortniteApi {
                 PersonaPublicService::class.java)
     }
 
-    override fun loginDeviceAuth() {
-        if (accountId == null || deviceId == null || secret == null)
+    override fun loginDeviceAuth(token: ClientToken) {
+        if (epicAccountId == null || deviceId == null || secret == null)
             throw EpicErrorException("To use device auth, account id, device id and secret must be defined")
-        val deviceAuthLogin = this.accountPublicService.grantToken("basic ${Utils.KAIROS_WEB_TOKEN}", "device_auth", mapOf("account_id" to accountId!!, "device_id" to deviceId!!, "secret" to secret!!, "token_type" to "eg1"), null).execute()
+        val deviceAuthLogin = this.accountPublicService.grantToken("basic ${token.token}", "device_auth", mapOf("account_id" to epicAccountId!!, "device_id" to deviceId!!, "secret" to secret!!, "token_type" to "eg1"), null).execute()
         if (!deviceAuthLogin.isSuccessful)
             throw EpicErrorException(EpicError.parse(deviceAuthLogin))
         loginSucceeded(deviceAuthLogin.body()!!)
@@ -202,7 +207,7 @@ class FortniteApiImpl internal constructor(): FortniteApi {
         val loginEmail = email
         val loginPassword = password
         if (loginEmail == null || loginPassword == null) {
-            return if (accountId != null && deviceId != null && secret != null)
+            return if (epicAccountId != null && deviceId != null && secret != null)
                 loginDeviceAuth()
             else
                 loginClientCredentials()
@@ -238,7 +243,7 @@ class FortniteApiImpl internal constructor(): FortniteApi {
         if (!exchange.isSuccessful)
             throw EpicErrorException(EpicError.parse(exchange))
         val exchangeCode = exchange.body()!!.code
-        val auth = this.accountPublicService.grantToken("basic ${Utils.CLIENT_LAUNCHER_TOKEN}", "exchange_code", mapOf("exchange_code" to exchangeCode, "token_type" to "eg1"), false).execute()
+        val auth = this.accountPublicService.grantToken("basic $clientLauncherToken", "exchange_code", mapOf("exchange_code" to exchangeCode, "token_type" to "eg1"), false).execute()
         if (!auth.isSuccessful)
             throw EpicErrorException(EpicError.parse(auth))
         loginSucceeded(auth.body()!!)
@@ -251,7 +256,7 @@ class FortniteApiImpl internal constructor(): FortniteApi {
                 login()
                 return
             }
-            val refresh = this.accountPublicService.grantToken("basic ${Utils.CLIENT_LAUNCHER_TOKEN}", "refresh_token", mapOf("refresh_token" to this.accountRefreshToken!!), null).execute()
+            val refresh = this.accountPublicService.grantToken("basic $clientLauncherToken", "refresh_token", mapOf("refresh_token" to this.accountRefreshToken!!), null).execute()
             if (!refresh.isSuccessful) {
                 System.err.println("Failed to use refresh token")
                 System.err.println(EpicError.parse(refresh).errorMessage)
@@ -267,7 +272,7 @@ class FortniteApiImpl internal constructor(): FortniteApi {
         this.epicAccountAccessToken = response.access_token
         this.accountExpiresAt = response.expires_at
         this.epicAccountExpiresAtMillis = System.currentTimeMillis() + TimeUnit.MILLISECONDS.convert(response.expires_in.toLong(), TimeUnit.SECONDS)
-        this.accountId = response.account_id
+        this.epicAccountId = response.account_id
         this.accountRefreshToken = response.refresh_token
         this.epicAccountTokenType = response.token_type
         this.isLoggedIn = true
@@ -281,4 +286,12 @@ class FortniteApiImpl internal constructor(): FortniteApi {
         println("Received " + event::class.java.simpleName)
         verifyToken()
     }
+
+    private var xmpp: XMPPService? = null
+
+    override val xmppService: XMPPService
+        get() {
+            if (xmpp == null) xmpp = XMPPService(this)
+            return xmpp!!
+        }
 }

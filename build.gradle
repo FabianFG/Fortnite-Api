@@ -6,12 +6,15 @@ plugins {
 }
 
 group 'me.fungames'
-version '1.6.4'
+version '1.6.7'
 
 sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    maven {
+        url  "https://dl.bintray.com/fungamesleaks/mavenRepo"
+    }
 }
 
 task sourcesJar(type: Jar) {

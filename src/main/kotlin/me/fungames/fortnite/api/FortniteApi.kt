@@ -4,6 +4,7 @@ import me.fungames.fortnite.api.events.Event
 import me.fungames.fortnite.api.exceptions.EpicErrorException
 import me.fungames.fortnite.api.model.LoginResponse
 import me.fungames.fortnite.api.network.services.*
+import okhttp3.CookieJar
 
 
 interface FortniteApi {
@@ -18,6 +19,7 @@ interface FortniteApi {
         private var accountId : String? = null
         private var deviceId : String? = null
         private var secret : String? = null
+        private var cookieJar : CookieJar? = null
 
         fun email(email: String): Builder {
             this.email = email
@@ -39,6 +41,11 @@ interface FortniteApi {
             return this
         }
 
+        fun cookieJar(cookieJar: CookieJar): Builder {
+            this.cookieJar = cookieJar
+            return this
+        }
+
         fun initWithLogin(login : LoginResponse?): Builder {
             this.loginResponse = login
             return this
@@ -49,7 +56,7 @@ interface FortniteApi {
             return this
         }
 
-        fun build() : FortniteApi = FortniteApiImpl().apply {
+        fun build() : FortniteApi = FortniteApiImpl(cookieJar).apply {
             if (clientToken != null) this.clientLauncherToken = clientToken!!
             if (this@Builder.email != null) this.email = this@Builder.email
             if (this@Builder.password != null) this.password = this@Builder.password
@@ -85,6 +92,8 @@ interface FortniteApi {
 
     @Throws(EpicErrorException::class)
     fun login(rememberMe : Boolean = false)
+
+    fun loginSucceeded(response: LoginResponse)
 
     @Throws(EpicErrorException::class)
     fun logout()

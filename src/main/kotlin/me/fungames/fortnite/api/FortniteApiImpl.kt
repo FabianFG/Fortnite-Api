@@ -13,6 +13,7 @@ import me.fungames.fortnite.api.model.notification.ProfileNotification
 import me.fungames.fortnite.api.network.DefaultInterceptor
 import me.fungames.fortnite.api.network.services.*
 import okhttp3.Cache
+import okhttp3.CookieJar
 import okhttp3.JavaNetCookieJar
 import java.net.CookieManager
 import java.net.CookiePolicy
@@ -20,7 +21,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class FortniteApiImpl internal constructor(): FortniteApi {
+class FortniteApiImpl internal constructor(cookieJar: CookieJar? = null): FortniteApi {
 
     var clientLauncherToken: String = ClientToken.FN_IOS_GAME_CLIENT.token
 
@@ -32,8 +33,9 @@ class FortniteApiImpl internal constructor(): FortniteApi {
     private val gson = GsonBuilder()
         .registerTypeAdapter(ProfileNotification::class.java, ProfileNotification.Serializer())
         .create()!!
+    val cookieJar = cookieJar ?: JavaNetCookieJar(CookieManager(null, CookiePolicy.ACCEPT_ALL))
     private val httpClient: OkHttpClient = OkHttpClient.Builder()
-        .cookieJar(JavaNetCookieJar(CookieManager(null, CookiePolicy.ACCEPT_ALL)))
+        .cookieJar(this.cookieJar)
         .cache(Cache(Utils.cacheDirFile, 4 * 1024 * 1024))
         .addInterceptor(DefaultInterceptor(this))
         .build()
@@ -239,7 +241,7 @@ class FortniteApiImpl internal constructor(): FortniteApi {
                 throw EpicErrorException("Failed to login to Epic Api: ${login.code()} ${EpicError.parse(login).errorMessage}")
             else return login(rememberMe, retryCount + 1)
         }
-        val exchange = this.epicGamesService.exchange().execute()
+        val exchange = this.epicGamesService.exchange(xsrfToken).execute()
         if (!exchange.isSuccessful)
             throw EpicErrorException(EpicError.parse(exchange))
         val exchangeCode = exchange.body()!!.code
@@ -268,7 +270,7 @@ class FortniteApiImpl internal constructor(): FortniteApi {
         }
     }
 
-    internal fun loginSucceeded(response: LoginResponse) {
+    override fun loginSucceeded(response: LoginResponse) {
         this.epicAccountAccessToken = response.access_token
         this.accountExpiresAt = response.expires_at
         this.epicAccountExpiresAtMillis = System.currentTimeMillis() + TimeUnit.MILLISECONDS.convert(response.expires_in.toLong(), TimeUnit.SECONDS)

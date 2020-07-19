@@ -188,7 +188,7 @@ class FortniteApiImpl internal constructor(): FortniteApi {
 
     override fun loginClientCredentials() {
         val loginRequest =
-            this.accountPublicService.grantToken("basic $clientLauncherToken", "client_credentials", emptyMap(), false)
+            this.accountPublicService.grantToken("basic $clientLauncherToken", "client_credentials", mapOf("token_type" to "eg1"), false)
         try {
             val response = loginRequest.execute()
             if (response.isSuccessful)

@@ -85,8 +85,11 @@ class FortniteApiImpl internal constructor(): FortniteApi {
             verifyToken()
             return field
         }
-
-
+    override val dataStoragePublicService: DataStoragePublicService
+        get() {
+            verifyToken()
+            return field
+        }
 
     override val accountTokenType: String
         get() {
@@ -160,6 +163,8 @@ class FortniteApiImpl internal constructor(): FortniteApi {
         personaPublicService =
             retrofitBuilder.baseUrl(PersonaPublicService.BASE_URL).build().create(
                 PersonaPublicService::class.java)
+        dataStoragePublicService = retrofitBuilder.baseUrl(DataStoragePublicService.BASE_URL)
+                .build().create(DataStoragePublicService::class.java)
     }
 
     override fun loginDeviceAuth(token: ClientToken) {

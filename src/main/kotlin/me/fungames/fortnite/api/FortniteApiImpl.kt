@@ -87,8 +87,11 @@ class FortniteApiImpl internal constructor(cookieJar: CookieJar? = null): Fortni
             verifyToken()
             return field
         }
-
-
+    override val dataStoragePublicService: DataStoragePublicService
+        get() {
+            verifyToken()
+            return field
+        }
 
     override val accountTokenType: String
         get() {
@@ -162,6 +165,8 @@ class FortniteApiImpl internal constructor(cookieJar: CookieJar? = null): Fortni
         personaPublicService =
             retrofitBuilder.baseUrl(PersonaPublicService.BASE_URL).build().create(
                 PersonaPublicService::class.java)
+        dataStoragePublicService = retrofitBuilder.baseUrl(DataStoragePublicService.BASE_URL)
+                .build().create(DataStoragePublicService::class.java)
     }
 
     override fun loginDeviceAuth(token: ClientToken) {
@@ -190,7 +195,7 @@ class FortniteApiImpl internal constructor(cookieJar: CookieJar? = null): Fortni
 
     override fun loginClientCredentials() {
         val loginRequest =
-            this.accountPublicService.grantToken("basic $clientLauncherToken", "client_credentials", emptyMap(), false)
+            this.accountPublicService.grantToken("basic $clientLauncherToken", "client_credentials", mapOf("token_type" to "eg1"), false)
         try {
             val response = loginRequest.execute()
             if (response.isSuccessful)

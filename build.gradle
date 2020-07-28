@@ -68,9 +68,9 @@ dependencies {
     api 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.2.2'
-    api 'org.igniterealtime.smack:smack-java7:4.3.4'
-    api 'org.igniterealtime.smack:smack-tcp:4.3.4'
-    api 'org.igniterealtime.smack:smack-extensions:4.3.4'
+    compileOnly 'org.igniterealtime.smack:smack-java7:4.3.4'
+    compileOnly 'org.igniterealtime.smack:smack-tcp:4.3.4'
+    compileOnly 'org.igniterealtime.smack:smack-extensions:4.3.4'
     implementation 'org.jetbrains.kotlin:kotlin-reflect:1.3.72'
 }
 

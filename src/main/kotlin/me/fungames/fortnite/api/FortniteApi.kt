@@ -114,6 +114,7 @@ interface FortniteApi {
     val launcherPublicService : LauncherPublicService
     val partyService : PartyService
     val personaPublicService : PersonaPublicService
+    val dataStoragePublicService: DataStoragePublicService
 
     val accountId: String
     var language: String

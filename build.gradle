@@ -6,7 +6,7 @@ plugins {
 }
 
 group 'me.fungames'
-version '1.6.7'
+version '1.7'
 
 sourceCompatibility = 1.8
 
@@ -65,7 +65,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation 'com.squareup.okhttp3:okhttp:4.2.2'
     api 'com.google.code.gson:gson:2.8.0'
-    api 'com.squareup.retrofit2:retrofit:2.3.0'
+    api 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.2.2'
     compileOnly 'org.igniterealtime.smack:smack-java7:4.3.4'

@@ -1,24 +1,26 @@
 package me.fungames.fortnite.api
 
-import me.fungames.fortnite.api.exceptions.EpicErrorException
-import me.fungames.fortnite.api.model.LoginResponse
-import java.io.IOException
-import me.fungames.fortnite.api.model.EpicError
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.Retrofit
-import okhttp3.OkHttpClient
 import com.google.gson.GsonBuilder
 import me.fungames.fortnite.api.events.Event
+import me.fungames.fortnite.api.exceptions.EpicErrorException
+import me.fungames.fortnite.api.model.EpicError
+import me.fungames.fortnite.api.model.LoginResponse
 import me.fungames.fortnite.api.model.notification.ProfileNotification
 import me.fungames.fortnite.api.network.DefaultInterceptor
 import me.fungames.fortnite.api.network.services.*
 import okhttp3.Cache
 import okhttp3.CookieJar
 import okhttp3.JavaNetCookieJar
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 import java.net.CookieManager
 import java.net.CookiePolicy
 import java.util.*
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 
 class FortniteApiImpl internal constructor(cookieJar: CookieJar? = null): FortniteApi {
@@ -39,6 +41,8 @@ class FortniteApiImpl internal constructor(cookieJar: CookieJar? = null): Fortni
         .cache(Cache(Utils.cacheDirFile, 4 * 1024 * 1024))
         .addInterceptor(DefaultInterceptor(this))
         .build()
+
+    private val mutex = ReentrantLock()
 
     override val accountPublicService: AccountPublicService
     override val affiliatePublicService : AffiliatePublicService
@@ -256,7 +260,8 @@ class FortniteApiImpl internal constructor(cookieJar: CookieJar? = null): Fortni
         loginSucceeded(auth.body()!!)
     }
 
-    private fun verifyToken() {
+
+    private fun verifyToken() = mutex.withLock {
         require(isLoggedIn) { "Api is not logged in" }
         if (System.currentTimeMillis() >= this.epicAccountExpiresAtMillis!!) {
             if (this.accountRefreshToken == null) {

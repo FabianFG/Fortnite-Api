@@ -38,7 +38,7 @@ class FortniteApiImpl internal constructor(cookieJar: CookieJar? = null): Fortni
     val cookieJar = cookieJar ?: JavaNetCookieJar(CookieManager(null, CookiePolicy.ACCEPT_ALL))
     private val httpClient: OkHttpClient = OkHttpClient.Builder()
         .cookieJar(this.cookieJar)
-        .cache(Cache(Utils.cacheDirFile, 4 * 1024 * 1024))
+        .cache(Cache(Utils.cacheDirFile, 4L * 1024 * 1024))
         .addInterceptor(DefaultInterceptor(this))
         .build()
 
